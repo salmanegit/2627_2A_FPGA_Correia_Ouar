@@ -169,15 +169,24 @@ end architecture rtl;
 ```
 
 Q7) 
-<br>
-<br>
-<br>
-<br>
+Ci-dessous le code VHDL permettant de faire clignoter une LED:
+
 <img width="787" height="432" alt="image" src="https://github.com/user-attachments/assets/928ba042-e130-49e2-aa36-2c08665210d1" />
 
 
+
+<br>
+<br>
+<br>
+
 Q8)
+Schéma proposé par quartus correspondant à ce code VHDL avec RTL Viewer:
 <img width="2238" height="570" alt="image" src="https://github.com/user-attachments/assets/34be2136-b762-466a-9a08-681ec0ae7449" />
+<br>
+<br>
+### Comparaison des deux schémas
+Les deux schémas représentent strictement le même circuit : une bascule D avec réinjection inversée. La seule différence est visuelle : le schéma manuel dessine une porte NON explicite sur la boucle de retour, tandis que Quartus la simplifie par une simple bulle d'inversion placée directement sur l'entrée D du registre
+
 Q11)
 
 
