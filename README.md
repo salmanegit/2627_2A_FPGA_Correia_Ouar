@@ -64,9 +64,42 @@ Ici, la LED est éteinte continuellement et s'allume lorsque l'on appuie sur l'e
 ## Faire clignoter une LED
 Q1 ) Sur la carte DE10-Nano, l'horloge FPGA_CLK1_50 est connectée sur la broche PIN_V11
 
-Q3) <img width="1200" height="1600" alt="WhatsApp Image 2026-10-01 at 10 26 11" src="https://github.com/user-attachments/assets/ec76c11c-64fd-407e-889d-54a23a2ef1cd" />
+Q3) Ci-dessous le code VHDL permettant de faire clignoter une LED:
+```vhdl
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity led_blink is
+    port (
+        i_clk : in std_logic;
+        i_rst_n : in std_logic;
+        o_led : out std_logic
+    );
+end entity led_blink;
+
+architecture rtl of led_blink is
+    signal r_led : std_logic := '0';
+begin
+    process(i_clk, i_rst_n)
+    begin
+        if (i_rst_n = '0') then
+            r_led <= '0';
+        elsif (rising_edge(i_clk)) then
+            r_led <= not r_led;
+        end if;
+    end process;
+    o_led <= r_led;
+end architecture rtl;
+```
 
 
+
+Schéma correspondant à ce code VHDL:
+<img width="1200" height="1600" alt="WhatsApp Image 2026-10-01 at 10 26 11" src="https://github.com/user-attachments/assets/ec76c11c-64fd-407e-889d-54a23a2ef1cd" />  
+  
+  
+  
+Schéma proposé par quartus correspondant à ce code VHDL avec RTL Viewer:
 <img width="2242" height="1350" alt="image" src="https://github.com/user-attachments/assets/8aa9e3d7-7455-451a-abaf-301fe811246c" />
 
 
