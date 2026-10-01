@@ -1,6 +1,7 @@
 # 2627_2A_FPGA_Correia_Ouar
 TP FPGA 2A
 
+```vhdl
 library ieee;
 use ieee.std_logic_1164.all;
 
@@ -15,12 +16,20 @@ architecture rtl of TP1_2627_OUAR_CORREIA is
 begin
     led0 <= pushl;
 end architecture rtl;
+```
+
+
+Avec RTL Viewer, on obtient le schéma suivant:
 
 Voici le comportement de la LED lorsque l'on appuie sur le bouton
 <img width="2250" height="1402" alt="image" src="https://github.com/user-attachments/assets/08c3a25a-412c-4fa9-8a3b-bca20184036b" />
 
 
 
+Ici, la LED reste allumée en continue et s'éteint lorsque l'on appuie sur l'encodeur.
+
+Inversion du comportement de la LED:
+```vhdl
 library ieee;
 use ieee.std_logic_1164.all;
 
@@ -35,8 +44,13 @@ architecture rtl of TP1_2627_OUAR_CORREIA is
 begin
     led0 <= not pushl;
 end architecture rtl;
-Voici la vue représentant
+
+```
+
+On obtient ensuite le schéma suivant:
 <img width="2252" height="1402" alt="image" src="https://github.com/user-attachments/assets/9af9ec44-068b-4257-8054-4e75b4b61de3" />
+Ici, la LED est éteinte continuellement et s'allume lorsque l'on appuie sur l'encodeur.
+
 
 
 Faire clignoter une LED
