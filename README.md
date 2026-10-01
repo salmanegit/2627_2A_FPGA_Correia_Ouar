@@ -22,7 +22,8 @@ end architecture rtl;
 Avec RTL Viewer, on obtient le schéma suivant:
 
 Voici le comportement de la LED lorsque l'on appuie sur le bouton
-<img width="2250" height="1402" alt="image" src="https://github.com/user-attachments/assets/08c3a25a-412c-4fa9-8a3b-bca20184036b" />
+<img width="662" height="107" alt="image" src="https://github.com/user-attachments/assets/d03b3f1f-c38b-4a1f-b1d1-0b4c9d9b95b2" />
+
 
 
 
@@ -49,7 +50,8 @@ end architecture rtl;
 ```
 
 On obtient ensuite le schéma suivant:
-<img width="2252" height="1402" alt="image" src="https://github.com/user-attachments/assets/9af9ec44-068b-4257-8054-4e75b4b61de3" />
+<img width="825" height="191" alt="image" src="https://github.com/user-attachments/assets/e5150f8b-067a-47ad-ba7d-09d4d7fe56cb" />
+
 Ici, la LED est éteinte continuellement et s'allume lorsque l'on appuie sur l'encodeur.
 
 
@@ -100,22 +102,28 @@ end architecture rtl;
 
 
 Schéma correspondant à ce code VHDL:
-<img width="1200" height="1600" alt="WhatsApp Image 2026-10-01 at 10 26 11" src="https://github.com/user-attachments/assets/ec76c11c-64fd-407e-889d-54a23a2ef1cd" />  
+<br>
+<br>
+<img width="721" height="495" alt="image" src="https://github.com/user-attachments/assets/7a5c8a01-7062-45bb-b089-7f77054ece83" />
 
 
-
-
-
-
-
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
 Schéma proposé par quartus correspondant à ce code VHDL avec RTL Viewer:
-<img width="2242" height="1350" alt="image" src="https://github.com/user-attachments/assets/8aa9e3d7-7455-451a-abaf-301fe811246c" />
+<img width="821" height="168" alt="image" src="https://github.com/user-attachments/assets/cddf6268-401c-404b-b354-dc4a79e85140" />
+
+
+
 
 Q6 ) Explication du code : 
 
 Premier process: 
-
+```vhdl
 architecture rtl of TP1_2627_OUAR_CORREIA is
     signal r_led : std_logic := '0';
     signal r_led_enable : std_logic := '0';
@@ -136,12 +144,15 @@ begin
             end if;
         end if;
     end process;
+```
+
+
 
 Le premier process sert à ralentir la fréquence de fonctionnement. On ajoute un
 compteur qui augmente de 1 à chaque front montant de l’horloge.
 
 Deuxième process : 
-
+```vhdl
  process(i_clk, i_rst_n)
     begin
         if (i_rst_n = '0') then
@@ -155,9 +166,15 @@ Deuxième process :
     
     o_led <= r_led;
 end architecture rtl;
+```
 
 Q7) 
-<img width="1200" height="1600" alt="WhatsApp Image 2026-10-01 at 11 03 09" src="https://github.com/user-attachments/assets/727ab4a8-8e5b-4a7e-a63b-52281ae68153" />
+<br>
+<br>
+<br>
+<br>
+<img width="787" height="432" alt="image" src="https://github.com/user-attachments/assets/928ba042-e130-49e2-aa36-2c08665210d1" />
+
 
 Q8)
 <img width="2238" height="570" alt="image" src="https://github.com/user-attachments/assets/34be2136-b762-466a-9a08-681ec0ae7449" />
