@@ -37,3 +37,7 @@ begin
 end architecture rtl;
 Voici la vue représentant
 <img width="2252" height="1402" alt="image" src="https://github.com/user-attachments/assets/9af9ec44-068b-4257-8054-4e75b4b61de3" />
+
+
+Faire clignoter une LED
+Q1 ) Sur la carte DE10-Nano, l'horloge FPGA_CLK1_50 est connectée sur la broche PIN_V11
