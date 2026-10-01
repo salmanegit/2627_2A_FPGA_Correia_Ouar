@@ -187,11 +187,19 @@ Schéma proposé par quartus correspondant à ce code VHDL avec RTL Viewer:
 ### Comparaison des deux schémas
 Les deux schémas représentent strictement le même circuit : une bascule D avec réinjection inversée. La seule différence est visuelle : le schéma manuel dessine une porte NON explicite sur la boucle de retour, tandis que Quartus la simplifie par une simple bulle d'inversion placée directement sur l'entrée D du registre
 
-Q11)
+<br>
+<br>
+<br>
 
+Q11)
+_n indique que le signal de reset est actif lorsqu'il est à l'état bas. Ainsi, le circuit se réinitialise lorsque le bouton est enfoncé (mettant la ligne à 0V), et fonctionne normalement lorsque la ligne est maintenue à l'état haut.
+
+<br>
+<br>
+<br>
 
 Chenillard : 
-Chenillard
+
 -- 1. 
 o_leds : out std_logic_vector(9 downto 0); -- Déclaration d'un vecteur de 10 bits pour adresser les 10 LEDs de la carte d'extension.
 
@@ -211,8 +219,6 @@ o_leds <= r_leds; -- Connexion des valeurs du registre interne aux sorties physi
 Nous avons affecté pour chaque led une pin dans Pin Planner à l’aide de l’annexe
 du TP :
 <img width="1900" height="390" alt="image" src="https://github.com/user-attachments/assets/5ca6e469-9541-4e0d-9397-399dbcc06a01" />
-
-
 
 
 
