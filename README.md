@@ -44,3 +44,7 @@ Q1 ) Sur la carte DE10-Nano, l'horloge FPGA_CLK1_50 est connectée sur la broche
 
 <img width="2242" height="1350" alt="image" src="https://github.com/user-attachments/assets/8aa9e3d7-7455-451a-abaf-301fe811246c" />
 
+
+<img width="2242" height="1350" alt="image" src="https://github.com/user-attachments/assets/a5e700de-aa63-40b3-b3f2-c5efbaf48698" />
+
+
