@@ -28,7 +28,7 @@ Voici le comportement de la LED lorsque l'on appuie sur le bouton
 
 Ici, la LED reste allumée en continu et s'éteint lorsque l'on appuie sur l'encodeur.
 
-Inversion du comportement de la LED:
+### Inversion du comportement de la LED:
 Nous avons ajouté l’opérateur logique “not” dans le code initial juste avant le push afin d'inverser l’allumage de la LED
 ```vhdl
 library ieee;
@@ -61,7 +61,7 @@ Ici, la LED est éteinte continuellement et s'allume lorsque l'on appuie sur l'e
 
 
 
-Faire clignoter une LED
+## Faire clignoter une LED
 Q1 ) Sur la carte DE10-Nano, l'horloge FPGA_CLK1_50 est connectée sur la broche PIN_V11
 
 Q3) <img width="1200" height="1600" alt="WhatsApp Image 2026-10-01 at 10 26 11" src="https://github.com/user-attachments/assets/ec76c11c-64fd-407e-889d-54a23a2ef1cd" />
