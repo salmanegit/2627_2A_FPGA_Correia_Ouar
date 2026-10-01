@@ -178,6 +178,23 @@ Q7)
 
 Q8)
 <img width="2238" height="570" alt="image" src="https://github.com/user-attachments/assets/34be2136-b762-466a-9a08-681ec0ae7449" />
+Q11)
+
+
+Chenillard
+
+Pour réaliser le chenillard, la sortie o_led et le registre r_led ont été modifiés en
+vecteurs de 10 bits pour commander les 10 LEDs de la carte.
+Pour cela, on a ajouté cette ligne : r_led <= r_led(9 downto 0) & '0';
+La LED allumée se déplace progressivement de LED0 vers LED9. Lorsque la
+dernière LED est atteinte on a utilisé ce code :
+if r_led = "1000000000" then r_led <= "0000000001";
+Le chenillard recommence depuis la première LED.
+
+Nous avons affecté pour chaque led une pin dans Pin Planner à l’aide de l’annexe
+du TP :
+<img width="1900" height="390" alt="image" src="https://github.com/user-attachments/assets/5ca6e469-9541-4e0d-9397-399dbcc06a01" />
+
 
 
 
