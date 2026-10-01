@@ -26,9 +26,10 @@ Voici le comportement de la LED lorsque l'on appuie sur le bouton
 
 
 
-Ici, la LED reste allumée en continue et s'éteint lorsque l'on appuie sur l'encodeur.
+Ici, la LED reste allumée en continu et s'éteint lorsque l'on appuie sur l'encodeur.
 
 Inversion du comportement de la LED:
+Nous avons ajouté l’opérateur logique “not” dans le code initial juste avant le push afin d'inverser l’allumage de la LED
 ```vhdl
 library ieee;
 use ieee.std_logic_1164.all;
@@ -50,6 +51,13 @@ end architecture rtl;
 On obtient ensuite le schéma suivant:
 <img width="2252" height="1402" alt="image" src="https://github.com/user-attachments/assets/9af9ec44-068b-4257-8054-4e75b4b61de3" />
 Ici, la LED est éteinte continuellement et s'allume lorsque l'on appuie sur l'encodeur.
+
+
+
+
+
+
+
 
 
 
