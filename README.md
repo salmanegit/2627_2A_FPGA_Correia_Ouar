@@ -190,15 +190,23 @@ Les deux schémas représentent strictement le même circuit : une bascule D ave
 Q11)
 
 
+Chenillard : 
 Chenillard
+-- 1. 
+o_leds : out std_logic_vector(9 downto 0); -- Déclaration d'un vecteur de 10 bits pour adresser les 10 LEDs de la carte d'extension.
 
-Pour réaliser le chenillard, la sortie o_led et le registre r_led ont été modifiés en
-vecteurs de 10 bits pour commander les 10 LEDs de la carte.
-Pour cela, on a ajouté cette ligne : r_led <= r_led(9 downto 0) & '0';
-La LED allumée se déplace progressivement de LED0 vers LED9. Lorsque la
-dernière LED est atteinte on a utilisé ce code :
-if r_led = "1000000000" then r_led <= "0000000001";
-Le chenillard recommence depuis la première LED.
+-- 2.
+signal r_leds : std_logic_vector(9 downto 0) := "0000000001"; -- Création du registre interne sur 10 bits, initialisé avec le premier bit à '1' pour amorcer le chenillard.
+
+-- 3.
+r_leds <= "0000000001"; -- Réinitialisation du registre à son état de départ en cas d'appui sur le bouton KEY0.
+
+-- 4. 
+r_leds <= r_leds(8 downto 0) & r_leds(9); -- Décalage circulaire par concaténation (&) : les 9 bits de droite sont décalés à gauche, et le bit sortant (9) est réinjecté à l'index 0.
+
+-- 5.
+o_leds <= r_leds; -- Connexion des valeurs du registre interne aux sorties physiques.
+
 
 Nous avons affecté pour chaque led une pin dans Pin Planner à l’aide de l’annexe
 du TP :
