@@ -112,8 +112,49 @@ Schéma correspondant à ce code VHDL:
 Schéma proposé par quartus correspondant à ce code VHDL avec RTL Viewer:
 <img width="2242" height="1350" alt="image" src="https://github.com/user-attachments/assets/8aa9e3d7-7455-451a-abaf-301fe811246c" />
 
+Q6 ) Explication du code : 
 
+Premier process: 
 
+architecture rtl of TP1_2627_OUAR_CORREIA is
+    signal r_led : std_logic := '0';
+    signal r_led_enable : std_logic := '0';
+begin
+    process(i_clk, i_rst_n)
+        variable counter : natural range 0 to 5000000 := 0;
+    begin
+        if (i_rst_n = '0') then
+            counter := 0;
+            r_led_enable <= '0';
+        elsif (rising_edge(i_clk)) then
+            if (counter = 5000000) then
+                counter := 0;
+                r_led_enable <= '1';
+            else
+                counter := counter + 1;
+                r_led_enable <= '0';
+            end if;
+        end if;
+    end process;
+
+Le premier process sert à ralentir la fréquence de fonctionnement. On ajoute un
+compteur qui augmente de 1 à chaque front montant de l’horloge.
+
+Deuxième process : 
+
+ process(i_clk, i_rst_n)
+    begin
+        if (i_rst_n = '0') then
+            r_led <= '0';
+        elsif (rising_edge(i_clk)) then
+            if (r_led_enable = '1') then
+                r_led <= not r_led;
+            end if;
+        end if;
+    end process;
+    
+    o_led <= r_led;
+end architecture rtl;
 
 Q7) 
 <img width="1200" height="1600" alt="WhatsApp Image 2026-10-01 at 11 03 09" src="https://github.com/user-attachments/assets/727ab4a8-8e5b-4a7e-a63b-52281ae68153" />
