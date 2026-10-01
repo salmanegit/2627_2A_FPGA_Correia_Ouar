@@ -104,5 +104,29 @@ Schéma proposé par quartus correspondant à ce code VHDL avec RTL Viewer:
 
 
 
+## Faire clignoter une LED
+Q1 ) Sur la carte DE10-Nano, l'horloge FPGA_CLK1_50 est connectée sur la broche PIN_V11
+Configuration des pins avec pin assignements : 
+<img width="1060" height="208" alt="image" src="https://github.com/user-attachments/assets/a68e81b4-07cc-43f5-8002-bbfa61ce56bc" />
+
+
+
+Q3) <img width="1200" height="1600" alt="WhatsApp Image 2026-10-01 at 10 26 11" src="https://github.com/user-attachments/assets/ec76c11c-64fd-407e-889d-54a23a2ef1cd" />
+
+
+<img width="2242" height="1350" alt="image" src="https://github.com/user-attachments/assets/8aa9e3d7-7455-451a-abaf-301fe811246c" />
+
+
+Q7) 
+<img width="1200" height="1600" alt="WhatsApp Image 2026-10-01 at 11 03 09" src="https://github.com/user-attachments/assets/727ab4a8-8e5b-4a7e-a63b-52281ae68153" />
+
+Q8)
+<img width="2238" height="570" alt="image" src="https://github.com/user-attachments/assets/34be2136-b762-466a-9a08-681ec0ae7449" />
+
+
+
+
+
+<img width="1714" height="428" alt="image" src="https://github.com/user-attachments/assets/ebac7352-8f6a-4ef2-bae0-0600c2242cb8" />
 
 
