@@ -261,7 +261,8 @@ du TP :
     end process;
 ```
 
-<img width="2184" height="742" alt="image" src="https://github.com/user-attachments/assets/9a3aba20-bad7-4900-bff5-bc57567b3cff" />
+<img width="2740" height="830" alt="image" src="https://github.com/user-attachments/assets/0f262a21-ecfc-48b4-8cc9-74772cfe8820" />
+
 
 
 
