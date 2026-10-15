@@ -236,7 +236,7 @@ du TP :
 2. Le signal de A est en avance d'une période d'horloge, ainsi au moment où A=1 et Aclk=0, alors il y a un front montant et inversement, au moment où A=0 et Aclk=1 alors il y à un front descendant. De même pour le signal B.
 
 
-3. 
+3.
 ```vhdl
  process(i_clk_50, i_rst_n)
     begin
@@ -261,7 +261,6 @@ du TP :
             end if;
         end if;
     end process;
-
 ```
 
 
