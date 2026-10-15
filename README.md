@@ -238,6 +238,29 @@ du TP :
 
 3. 
 ```vhdl
+ process(i_clk_50, i_rst_n)
+    begin
+        if i_rst_n = '0' then
+            r_A_prev  <= '0';
+            r_B_prev  <= '0';
+            r_counter <= (others => '0');
+            
+        elsif rising_edge(i_clk_50) then
+            r_A_prev <= i_left_ch_a; 
+            r_B_prev <= i_left_ch_b;
+            
+            -- Detection signal A
+            if (i_left_ch_a = '1' and r_A_prev = '0' and i_left_ch_b = '0') or 
+               (i_left_ch_a = '0' and r_A_prev = '1' and i_left_ch_b = '1') then
+                r_counter <= r_counter + 1;
+                
+            -- Detection signal B
+            elsif (i_left_ch_b = '1' and r_B_prev = '0' and i_left_ch_a = '0') or 
+                  (i_left_ch_b = '0' and r_B_prev = '1' and i_left_ch_a = '1') then
+                r_counter <= r_counter - 1;
+            end if;
+        end if;
+    end process;
 
 ```
 
