@@ -250,13 +250,11 @@ du TP :
             r_B_prev <= i_left_ch_b;
             
             -- Detection signal A
-            if (i_left_ch_a = '1' and r_A_prev = '0' and i_left_ch_b = '0') or 
-               (i_left_ch_a = '0' and r_A_prev = '1' and i_left_ch_b = '1') then
+            if (i_left_ch_a = '1' and r_A_prev = '0' and i_left_ch_b = '0') then
                 r_counter <= r_counter + 1;
                 
             -- Detection signal B
-            elsif (i_left_ch_b = '1' and r_B_prev = '0' and i_left_ch_a = '0') or 
-                  (i_left_ch_b = '0' and r_B_prev = '1' and i_left_ch_a = '1') then
+            elsif (i_left_ch_b = '1' and r_B_prev = '0' and i_left_ch_a = '0') then
                 r_counter <= r_counter - 1;
             end if;
         end if;
