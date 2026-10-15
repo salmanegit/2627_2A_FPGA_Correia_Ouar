@@ -221,8 +221,35 @@ du TP :
 <img width="1900" height="390" alt="image" src="https://github.com/user-attachments/assets/5ca6e469-9541-4e0d-9397-399dbcc06a01" />
 
 
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+# 2627_2A_FPGA_Correia_Ouar_TP2
+## TP FPGA 2A - 2ème séance
+
+<br>
+
+2. Le signal de A est en avance d'une période d'horloge, ainsi au moment où A=1 et Aclk=0, alors il y a un front montant et inversement, au moment où A=0 et Aclk=1 alors il y à un front descendant. De même pour le signal B.
 
 
+3. 
+```vhdl
+
+```
+
+
+4. Simulation sur Quartus:
+
+
+
+5. Test sur la carte
+
+
+## Contrôleur HDMI
 
 
 
