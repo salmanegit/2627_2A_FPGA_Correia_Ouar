@@ -263,6 +263,9 @@ du TP :
     end process;
 ```
 
+<img width="2184" height="742" alt="image" src="https://github.com/user-attachments/assets/9a3aba20-bad7-4900-bff5-bc57567b3cff" />
+
+
 
 4. Simulation sur Quartus:
 
