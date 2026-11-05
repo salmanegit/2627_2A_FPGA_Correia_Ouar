@@ -271,7 +271,146 @@ du TP :
 
 
 
-5. Test sur la carte
+5. Test sur la carte :
+
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity telecran is
+    port (
+        -- FPGA
+        i_clk_50: in std_logic;
+
+        -- HDMI
+        io_hdmi_i2c_scl       : inout std_logic;
+        io_hdmi_i2c_sda       : inout std_logic;
+        o_hdmi_tx_clk         : out std_logic;
+        o_hdmi_tx_d           : out std_logic_vector(23 downto 0);
+        o_hdmi_tx_de          : out std_logic;
+        o_hdmi_tx_hs          : out std_logic;
+        i_hdmi_tx_int         : in std_logic;
+        o_hdmi_tx_vs          : out std_logic;
+
+        -- KEYs
+        i_rst_n : in std_logic;
+          
+        -- LEDs
+        o_leds : out std_logic_vector(9 downto 0);
+        o_de10_leds : out std_logic_vector(7 downto 0);
+
+        -- Coder
+        i_left_ch_a : in std_logic;
+        i_left_ch_b : in std_logic;
+        i_left_pb : in std_logic;
+        i_right_ch_a : in std_logic;
+        i_right_ch_b : in std_logic;
+        i_right_pb : in std_logic
+    );
+end entity telecran;
+
+architecture rtl of telecran is
+    component I2C_HDMI_Config 
+        port (
+            iCLK : in std_logic;
+            iRST_N : in std_logic;
+            I2C_SCLK : out std_logic;
+            I2C_SDAT : inout std_logic;
+            HDMI_TX_INT  : in std_logic
+        );
+     end component;
+    
+    component pll 
+        port (
+            refclk : in std_logic;
+            rst : in std_logic;
+            outclk_0 : out std_logic;
+            locked : out std_logic
+        );
+    end component;
+
+    constant h_res : natural := 720;
+    constant v_res : natural := 480;
+
+    signal s_clk_27 : std_logic;
+    signal s_rst_n : std_logic; 
+    
+    -- Signaux pour l'encodeur
+    signal r_A_prev : std_logic := '0';
+    signal r_B_prev : std_logic := '0';
+    signal r_counter : unsigned(9 downto 0) := (others => '0');
+    
+    -- NOUVEAU : Compteur et signal pour l'anti-rebond (échantillonnage à 1 ms)
+    signal r_debounce_cnt : natural range 0 to 50000 := 0;
+    signal s_sample_en : std_logic;
+    
+begin
+    o_leds <= std_logic_vector(r_counter);
+    o_de10_leds <= (others => '0');
+    
+    -- Génération d'une impulsion d'autorisation (enable) toutes les 1 ms
+    process(i_clk_50, i_rst_n)
+    begin
+        if i_rst_n = '0' then
+            r_debounce_cnt <= 0;
+        elsif rising_edge(i_clk_50) then
+            if r_debounce_cnt = 50000 then
+                r_debounce_cnt <= 0;
+            else
+                r_debounce_cnt <= r_debounce_cnt + 1;
+            end if;
+        end if;
+    end process;
+
+    s_sample_en <= '1' when r_debounce_cnt = 50000 else '0';
+
+    -- Process de l'encodeur avec anti-rebond et conditions complètes
+    process(i_clk_50, i_rst_n)
+    begin
+        if i_rst_n = '0' then
+            r_A_prev  <= '0';
+            r_B_prev  <= '0';
+            r_counter <= (others => '0');
+            
+        elsif rising_edge(i_clk_50) then
+            -- On lit l'encodeur UNIQUEMENT toutes les 1 ms
+            if s_sample_en = '1' then
+                
+                -- Incrémentation : Front montant A (B=0) OU Front descendant A (B=1)
+                if (i_left_ch_a = '1' and r_A_prev = '0' and i_left_ch_b = '0') or
+                   (i_left_ch_a = '0' and r_A_prev = '1' and i_left_ch_b = '1') then
+                    r_counter <= r_counter + 1;
+                    
+                -- Décrémentation : Front montant B (A=0) OU Front descendant B (A=1)
+                elsif (i_left_ch_b = '1' and r_B_prev = '0' and i_left_ch_a = '0') or
+                      (i_left_ch_b = '0' and r_B_prev = '1' and i_left_ch_a = '1') then
+                    r_counter <= r_counter - 1;
+                end if;
+
+                -- Mémorisation de l'état pour le prochain cycle de 1 ms
+                r_A_prev <= i_left_ch_a; 
+                r_B_prev <= i_left_ch_b;
+            end if;
+        end if;
+    end process;
+
+    pll0 : component pll 
+        port map (
+            refclk => i_clk_50,
+            rst => not(i_rst_n),
+            outclk_0 => s_clk_27,
+            locked => s_rst_n
+        );
+
+    I2C_HDMI_Config0 : component I2C_HDMI_Config 
+        port map (
+            iCLK => i_clk_50,
+            iRST_N => i_rst_n,
+            I2C_SCLK => io_hdmi_i2c_scl,
+            I2C_SDAT => io_hdmi_i2c_sda,
+            HDMI_TX_INT => i_hdmi_tx_int
+     );
+end architecture rtl;
 
 
 ## Contrôleur HDMI
