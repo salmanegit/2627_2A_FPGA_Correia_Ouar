@@ -273,6 +273,9 @@ du TP :
 
 5. Test sur la carte :
 
+Ce programme récupère les mouvements physiques de l'encodeur rotatif pour incrémenter ou décrémenter un compteur. Il permet un affichage binaire sur les LEDs de la carte ainsi qu'un filtre anti-rebond.
+
+```vhdl
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
@@ -347,7 +350,11 @@ architecture rtl of telecran is
 begin
     o_leds <= std_logic_vector(r_counter);
     o_de10_leds <= (others => '0');
-    
+```
+
+Affichage en binaire : La valeur décimale du compteur (r_counter) est directement reliée aux 10 LEDs physiques de la carte. La fonction std_logic_vector() convertit ce nombre en un vecteur de 10 bits (0 ou 1)
+
+```vhdl    
     -- Génération d'une impulsion d'autorisation (enable) toutes les 1 ms
     process(i_clk_50, i_rst_n)
     begin
@@ -363,7 +370,10 @@ begin
     end process;
 
     s_sample_en <= '1' when r_debounce_cnt = 50000 else '0';
+```
 
+Génération du délai (Timer) : L'horloge du FPGA tournant à 50 MHz, le compteur r_debounce_cnt est configuré pour s'incrémenter jusqu'à 50 000. Cela correspond exactement à un délai de 1 milliseconde. À la fin de ce cycle, une impulsion d'activation (s_sample_en) est envoyée.
+```vhdl    
     -- Process de l'encodeur avec anti-rebond et conditions complètes
     process(i_clk_50, i_rst_n)
     begin
@@ -371,7 +381,11 @@ begin
             r_A_prev  <= '0';
             r_B_prev  <= '0';
             r_counter <= (others => '0');
-            
+```
+
+Filtre anti-rebond (Debounce) : Les contacts métalliques de la molette créent des parasites électriques lors de la rotation. Grâce à la condition if s_sample_en = '1', le FPGA ne lit les broches de l'encodeur qu'une seule fois par milliseconde. Ce ralentissement laisse le temps aux contacts de se stabiliser et évite que le compteur ne s'emballe.
+
+```vhdl    
         elsif rising_edge(i_clk_50) then
             -- On lit l'encodeur UNIQUEMENT toutes les 1 ms
             if s_sample_en = '1' then
@@ -411,7 +425,7 @@ begin
             HDMI_TX_INT => i_hdmi_tx_int
      );
 end architecture rtl;
-
+```
 
 ## Contrôleur HDMI
 
