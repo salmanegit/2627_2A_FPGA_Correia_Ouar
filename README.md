@@ -267,7 +267,8 @@ du TP :
 
 
 
-4. Simulation sur Quartus:
+4. Simulation sur Modelsim:
+<img width="2298" height="1058" alt="image" src="https://github.com/user-attachments/assets/55febbce-63e0-4066-8a58-093e942c1879" />
 
 
 
