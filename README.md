@@ -874,6 +874,12 @@ begin
     end process;
 end rtl;
 ```
+
+
+
+
+<img width="2880" height="1614" alt="image" src="https://github.com/user-attachments/assets/45276914-5489-4324-b0f4-f8d54b315ccf" />
+
 ## Déplacement d'un pixel
 
 
