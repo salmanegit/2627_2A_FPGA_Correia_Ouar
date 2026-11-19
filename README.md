@@ -595,6 +595,17 @@ Au lieu de regarder uniquement la position actuelle des boutons, on regarde main
 
 
 ## Effacement
+1. Problème et solution
+
+Le problème :
+Une mémoire RAM ne peut pas remettre toutes ses cases à zéro en une seule fois. Comme notre écran contient 345 600 pixels (cases 0 à 345599), il faut parcourir toutes les cases une par une pour y écrire "0".
+Notre solution :
+On a créé un système à deux modes de fonctionnement (une machine à états r_state) qui commande le Port A de la mémoire :
+Mode dessin (S_DRAW) : C'est le mode normal. 
+Le Port A écrit "1" à la position des boutons pour tracer le dessin.
+Déclenchement : Dès qu'on appuie sur le bouton-poussoir de l'encodeur gauche (i_left_pb = '0'), on remet un compteur d'adresse (r_clear_addr) à 0 et on passe en mode effacement (S_CLEAR).
+Mode effacement (S_CLEAR) : on débranche temporairement les boutons du Port A et y branche le compteur r_clear_addr avec la donnée "0". À chaque tic d'horloge 50MHz, le compteur avance d'une case (0, 1, 2... jusqu'à 345599) et écrit "0" dedans. Une fois la dernière case atteinte, on repasse automatiquement en mode dessin (S_DRAW).
+
 
 ```VHDL
 -- 2. Machine à états pour l'effacement de l'écran (appui sur bouton encodeur gauche)
