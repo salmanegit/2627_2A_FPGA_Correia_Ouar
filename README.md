@@ -568,7 +568,7 @@ Une mémoire dual-port (DPRAM) est une mémoire qui possède deux accès totalem
 Dans notre projet, cela nous permet de faire deux choses en même temps sans qu'elles se gênent :Le port A sert à enregistrer le dessin dès qu'on tourne les boutons (à $50\text{ MHz}$).
 Le port B sert à lire l'image en continu pour l'envoyer à l'écran HDMI (à $27\text{ MHz}$).   
 
-<img width="1600" height="847" alt="image" src="https://github.com/user-attachments/assets/d73c629a-4568-422f-9045-9bcb448ae418" />
+
 2. Schéma 
 Comme l'écran est un tableau en 2D (720 * 480 pixels) et que la mémoire est une longue liste en 1D de $345\,600$ cases (de 0 à 345599), on transforme chaque position (X, Y) en un numéro de case unique avec le calcul :
 Adresse = (Y * 720) + X 
