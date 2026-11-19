@@ -438,12 +438,14 @@ end architecture rtl;
 
 code telecran.vhd 
 
+```vhdl
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 library pll;
 use pll.all;
+
 
 entity telecran is
     port (
@@ -661,12 +663,13 @@ begin
             HDMI_TX_INT => i_hdmi_tx_int
         );
 end architecture rtl;
-
+```
 
 
 
 code hdmi_controler.vhd
 
+```vhdl
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
@@ -807,11 +810,13 @@ begin
 	o_x_counter <= s_x_counter;
 	o_y_counter <= s_y_counter;
 end architecture rtl;
+```
 
-
+5) Le signal o_hdmi_tx_d est codé sur 24 bits : de 0 à 7 c'est le bleu, de 8 à 15 c'est vert, et de 23 à 16 c'est rouge.
 
 code dpram.vhd
 
+```vhdl
 library ieee;
 use ieee.std_logic_1164.all;
 
@@ -868,4 +873,13 @@ begin
         end if;
     end process;
 end rtl;
+```
+## Déplacement d'un pixel
 
+
+
+## Mémorisation
+
+
+
+## Effacement
