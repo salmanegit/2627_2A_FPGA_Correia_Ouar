@@ -573,7 +573,9 @@ Le port B sert à lire l'image en continu pour l'envoyer à l'écran HDMI (à $2
 
 <img width="1600" height="847" alt="image" src="https://github.com/user-attachments/assets/d73c629a-4568-422f-9045-9bcb448ae418" />
 2. Schéma 
-Comme l'écran est un tableau en 2D ($720 \times 480$ pixels) et que la mémoire est une longue liste en 1D de $345\,600$ cases (de 0 à 345599), on transforme chaque position (X, Y) en un numéro de case unique avec le calcul :$$\text{Adresse} = (Y \times 720) + X$$Chaque case stocke simplement 1 si le pixel a été dessiné (blanc) ou 0 s'il est vide (noir).
+Comme l'écran est un tableau en 2D (720 * 480 pixels) et que la mémoire est une longue liste en 1D de $345\,600$ cases (de 0 à 345599), on transforme chaque position (X, Y) en un numéro de case unique avec le calcul :
+Adresse = (Y * 720) + X 
+Chaque case stocke simplement 1 si le pixel a été dessiné (blanc) ou 0 s'il est vide (noir).
 <img width="2048" height="762" alt="WhatsApp Image 2026-11-19 at 11 24 03" src="https://github.com/user-attachments/assets/a6c7705b-07b6-429c-9d1d-ff0d4fb5e571" />
 
 
