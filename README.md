@@ -636,4 +636,4 @@ end process;
 s_ram_addr_a <= r_clear_addr when r_state = S_CLEAR else s_addr_enc;
 s_ram_data_a <= "0" when r_state = S_CLEAR else "1";
 ```
-
+Explication : On garde la position actuelle de notre curseur (r_x_pos, r_y_pos) en mémoire, mais tout le dessin précédent disparaît instantanément quand on appuie sur le bouton de gauche.
