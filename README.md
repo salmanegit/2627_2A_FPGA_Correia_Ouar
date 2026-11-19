@@ -534,9 +534,6 @@ L'encodeur gauche contrôle la coordonnée horizontale r_x_pos et l'encodeur dro
 
 ## Mémorisation
 
-1)
-C'est une mémoire RAM qui possède deux accès totalement indépendants (Port A et Port B), chacun avec sa propre horloge et ses propres adresses. Ici, c'est indispensable car le Port A écrit les nouveaux pixels au rythme des encodeurs (50 MHz) pendant que le Port B lit l'image en continu pour le contrôleur HDMI (27 MHz).
-
 ```VHDL
 -- Calculs d'adresses linéaires (Y * Largeur + X)
 s_addr_enc   <= (r_y_pos * h_res) + r_x_pos;
