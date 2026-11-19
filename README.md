@@ -524,6 +524,13 @@ end rtl;
 <img width="2880" height="1614" alt="image" src="https://github.com/user-attachments/assets/45276914-5489-4324-b0f4-f8d54b315ccf" />
 
 ## Déplacement d'un pixel
+
+```VHDL
+-- Signaux Encodeur Gauche (Axe X) et Droit (Axe Y)
+signal r_x_pos : natural range 0 to h_res - 1 := h_res / 2; -- Départ au centre
+signal r_y_pos : natural range 0 to v_res - 1 := v_res / 2;
+```
+
 1. Modification du fichier telecran.vhd
 Calcul de la position (r_x_pos, r_y_pos) avec les encodeurs :
 On lit les signaux des deux boutons rotatifs pour déplacer notre point à l'écran. Le bouton de gauche (i_left_ch_a, i_left_ch_b) fait bouger le point à l'horizontale sur r_x_pos (entre 0 et 719), et le bouton de droite (i_right_ch_a, i_right_ch_b) le fait bouger à la verticale sur r_y_pos (entre 0 et 479) — on a corrigé l'erreur du sujet qui parlait deux fois du bouton de gauche.
