@@ -454,6 +454,7 @@ u_hdmi : entity work.hdmi_controler
         o_y_counter     => s_y_counter
     );
 ```
+Voir le code complet : [hdmi_controler.vhd](./code/hdmi_controler.vhd)
 
 5) Le signal o_hdmi_tx_d est codé sur 24 bits : de 0 à 7 c'est le bleu, de 8 à 15 c'est vert, et de 23 à 16 c'est rouge.
 
@@ -529,8 +530,6 @@ Dès que l'écran affiche l'endroit où se trouve notre point (r_x_pos, r_y_pos)
 Vérification sur la carte et à l'écran :Sur la carte DE10-Nano : Pour vérifier que le bouton de gauche comptait bien les crans avant même de regarder l'écran, on a relié la position horizontale r_x_pos aux 10 LEDs de la carte (o_leds <= std_logic_vector(to_unsigned(r_x_pos, 10));), ce qui nous a permis de voir les LEDs changer en direct.
 via VLC : Après avoir envoyé le programme dans la carte, on a bien obtenu un seul point blanc au milieu de l'écran qui bouge à l'horizontale et à la verticale quand on tourne les deux boutons, sans jamais sortir des bords de l'image (720x480).
 
-
-L'encodeur gauche contrôle la coordonnée horizontale r_x_pos et l'encodeur droit contrôle la coordonnée verticale r_y_pos , avec un point de départ au centre de l'écran (h_res / 2, v_res / 2).
 
 ## Mémorisation
 
