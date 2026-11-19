@@ -457,66 +457,6 @@ u_hdmi : entity work.hdmi_controler
 
 5) Le signal o_hdmi_tx_d est codé sur 24 bits : de 0 à 7 c'est le bleu, de 8 à 15 c'est vert, et de 23 à 16 c'est rouge.
 
-code dpram.vhd
-
-```vhdl
-library ieee;
-use ieee.std_logic_1164.all;
-
-entity dpram is
-    generic
-    (
-        mem_size    : natural := 720 * 480;
-        data_width  : natural := 8
-    );
-   port 
-   (   
-        i_clk_a     : in std_logic;
-        i_clk_b     : in std_logic;
-
-        i_data_a    : in std_logic_vector(data_width-1 downto 0);
-        i_data_b    : in std_logic_vector(data_width-1 downto 0);
-        i_addr_a    : in natural range 0 to mem_size-1;
-        i_addr_b    : in natural range 0 to mem_size-1;
-        i_we_a      : in std_logic := '1';
-        i_we_b      : in std_logic := '1';
-        o_q_a       : out std_logic_vector(data_width-1 downto 0);
-        o_q_b       : out std_logic_vector(data_width-1 downto 0)
-   );
-   
-end dpram;
-
-architecture rtl of dpram is
-    -- Build a 2-D array type for the RAM
-    subtype word_t is std_logic_vector(data_width-1 downto 0);
-    type memory_t is array(0 to mem_size-1) of word_t;
-    
-    -- Declare the RAM
-    shared variable ram : memory_t;
-begin
-    -- Port A
-    process(i_clk_a)
-    begin
-        if(rising_edge(i_clk_a)) then 
-            if(i_we_a = '1') then
-                ram(i_addr_a) := i_data_a;
-            end if;
-            o_q_a <= ram(i_addr_a);
-        end if;
-    end process;
-    
-    -- Port B
-    process(i_clk_b)
-    begin
-        if(rising_edge(i_clk_b)) then
-            if(i_we_b = '1') then
-                ram(i_addr_b) := i_data_b;
-            end if;
-            o_q_b <= ram(i_addr_b);
-        end if;
-    end process;
-end rtl;
-```
 
 
 
@@ -590,8 +530,12 @@ Vérification sur la carte et à l'écran :Sur la carte DE10-Nano : Pour vérifi
 via VLC : Après avoir envoyé le programme dans la carte, on a bien obtenu un seul point blanc au milieu de l'écran qui bouge à l'horizontale et à la verticale quand on tourne les deux boutons, sans jamais sortir des bords de l'image ($720 \times 480$).
 
 
+L'encodeur gauche contrôle la coordonnée horizontale r_x_pos et l'encodeur droit contrôle la coordonnée verticale r_y_pos , avec un point de départ au centre de l'écran (h_res / 2, v_res / 2).
 
 ## Mémorisation
+
+1)
+C'est une mémoire RAM qui possède deux accès totalement indépendants (Port A et Port B), chacun avec sa propre horloge et ses propres adresses. Ici, c'est indispensable car le Port A écrit les nouveaux pixels au rythme des encodeurs (50 MHz) pendant que le Port B lit l'image en continu pour le contrôleur HDMI (27 MHz).
 
 ```VHDL
 -- Calculs d'adresses linéaires (Y * Largeur + X)
