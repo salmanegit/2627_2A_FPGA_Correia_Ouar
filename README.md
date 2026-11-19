@@ -636,5 +636,3 @@ s_ram_addr_a <= r_clear_addr when r_state = S_CLEAR else s_addr_enc;
 s_ram_data_a <= "0" when r_state = S_CLEAR else "1";
 ```
 Explication : On garde la position actuelle de notre curseur (r_x_pos, r_y_pos) en mémoire, mais tout le dessin précédent disparaît instantanément quand on appuie sur le bouton de gauche.
-
-Comme on ne peut pas remettre à zéro toutes les cases de la RAM en un seul coup d'horloge, on utilise une machine à états avec deux modes (S_DRAW et S_CLEAR). En mode S_DRAW, on dessine normalement en écrivant '1'. Quand on appuie sur le bouton de l'encodeur gauche (i_left_pb = '0'), on passe en mode S_CLEAR : un compteur (r_clear_addr) parcourt toutes les adresses de 0 à 345 599 pour écrire '0' partout, puis le système repasse tout seul en mode S_DRAW.
