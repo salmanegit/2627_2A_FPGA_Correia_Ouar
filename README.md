@@ -534,7 +534,21 @@ L'encodeur gauche contrôle la coordonnée horizontale r_x_pos et l'encodeur dro
 
 ## Mémorisation
 
-```VHDL
+
+1. Mémoire dual-port
+Une mémoire dual-port (DPRAM) est une mémoire qui possède deux accès totalement indépendants port A et port B, chacun ayant sa propre horloge, son adresse et ses propres fils de données.
+Dans notre projet, cela nous permet de faire deux choses en même temps sans qu'elles se gênent :Le port A sert à enregistrer le dessin dès qu'on tourne les boutons (à 50 MHz).
+Le port B sert à lire l'image en continu pour l'envoyer à l'écran HDMI (à 27 MHz).   
+
+
+2. Schéma 
+Comme l'écran est un tableau en 2D (720 * 480 pixels) et que la mémoire est une longue liste en 1D de 345 600 cases (de 0 à 345599), on transforme chaque position (X, Y) en un numéro de case unique avec le calcul :
+Adresse = (Y * 720) + X 
+Chaque case stocke simplement 1 si le pixel a été dessiné (blanc) ou 0 s'il est vide (noir).
+<img width="2048" height="762" alt="WhatsApp Image 2026-11-19 at 11 24 03" src="https://github.com/user-attachments/assets/a6c7705b-07b6-429c-9d1d-ff0d4fb5e571" />
+3. Instanciez le composant dpram dans le fichier telecran.vhd et effectuez les connexions nécessaires.
+
+  ```VHDL
 -- Calculs d'adresses linéaires (Y * Largeur + X)
 s_addr_enc   <= (r_y_pos * h_res) + r_x_pos;
 s_ram_addr_b <= (s_y_counter * h_res) + s_x_counter when (s_x_counter < h_res and s_y_counter < v_res) else 0;
@@ -562,41 +576,6 @@ u_ram : entity work.dpram
 o_hdmi_tx_d <= x"FFFFFF" when s_pixel_read = "1" else x"000000";
 
 ```
-
-1. Mémoire dual-port
-Une mémoire dual-port (DPRAM) est une mémoire qui possède deux accès totalement indépendants port A et port B, chacun ayant sa propre horloge, son adresse et ses propres fils de données.
-Dans notre projet, cela nous permet de faire deux choses en même temps sans qu'elles se gênent :Le port A sert à enregistrer le dessin dès qu'on tourne les boutons (à 50 MHz).
-Le port B sert à lire l'image en continu pour l'envoyer à l'écran HDMI (à 27 MHz).   
-
-
-2. Schéma 
-Comme l'écran est un tableau en 2D (720 * 480 pixels) et que la mémoire est une longue liste en 1D de 345 600 cases (de 0 à 345599), on transforme chaque position (X, Y) en un numéro de case unique avec le calcul :
-Adresse = (Y * 720) + X 
-Chaque case stocke simplement 1 si le pixel a été dessiné (blanc) ou 0 s'il est vide (noir).
-<img width="2048" height="762" alt="WhatsApp Image 2026-11-19 at 11 24 03" src="https://github.com/user-attachments/assets/a6c7705b-07b6-429c-9d1d-ff0d4fb5e571" />
-3. Instanciez le composant dpram dans le fichier telecran.vhd et effectuez les connexions nécessaires.
-
-    s_addr_enc   <= (r_y_pos * h_res) + r_x_pos;
-    s_ram_addr_b <= (s_y_counter * h_res) + s_x_counter when (s_x_counter < h_res and s_y_counter < v_res) else 0;
-
-
-    u_ram : entity work.dpram
-        generic map (
-            mem_size   => c_mem_size,
-            data_width => 1
-        )
-        port map (
-            i_clk_a  => i_clk_50,
-            i_clk_b  => s_clk_27,
-            i_data_a => s_ram_data_a,
-            i_data_b => "0",
-            i_addr_a => s_ram_addr_a,
-            i_addr_b => s_ram_addr_b,
-            i_we_a   => '1',
-            i_we_b   => '0',
-            o_q_a    => open,
-            o_q_b    => s_pixel_read
-        );
 
 Explication : 
 On configure la mémoire avec mem_size => c_mem_size (720 * 480 = 345 600 cases) et data_width => 1 (1 seul bit par case).
