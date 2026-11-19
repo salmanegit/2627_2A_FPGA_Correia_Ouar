@@ -270,6 +270,10 @@ du TP :
 4. Simulation sur Modelsim:
 <img width="2298" height="1058" alt="image" src="https://github.com/user-attachments/assets/55febbce-63e0-4066-8a58-093e942c1879" />
 
+Interprétation :  
+On observe bien les deux sens de rotation simulés par le testbench.   Sens 1 (Incrémentation) : Le signal i_ch_a passe à '1' en premier (en avance sur i_ch_b). Le compteur o_leds s'incrémente bien et passe de 0000000000 à 0000000001 (valeur 1).   
+Sens 2 (Décrémentation) : Plus loin dans la simulation (autour de 700 000 ps), c'est le signal i_ch_b qui passe à '1' en premier (en avance sur i_ch_a). Le compteur détecte le changement de sens et se décrémente pour revenir à 0000000000 (valeur 0).   
+La logique de détection de sens et le compteur fonctionnent bien. 
 
 
 5. Test sur la carte :
@@ -344,7 +348,7 @@ architecture rtl of telecran is
     signal r_B_prev : std_logic := '0';
     signal r_counter : unsigned(9 downto 0) := (others => '0');
     
-    -- NOUVEAU : Compteur et signal pour l'anti-rebond (échantillonnage à 1 ms)
+    -- Compteur et signal pour l'anti-rebond (échantillonnage à 1 ms)
     signal r_debounce_cnt : natural range 0 to 50000 := 0;
     signal s_sample_en : std_logic;
     
@@ -375,20 +379,16 @@ Affichage en binaire : La valeur décimale du compteur (r_counter) est directeme
 
 Génération du délai (Timer) : L'horloge du FPGA tournant à 50 MHz, le compteur r_debounce_cnt est configuré pour s'incrémenter jusqu'à 50 000. Cela correspond exactement à un délai de 1 milliseconde. À la fin de ce cycle, une impulsion d'activation (s_sample_en) est envoyée.
 ```vhdl    
-    -- Process de l'encodeur avec anti-rebond et conditions complètes
+    -- Process de l'encodeur avec anti-rebond
     process(i_clk_50, i_rst_n)
     begin
         if i_rst_n = '0' then
             r_A_prev  <= '0';
             r_B_prev  <= '0';
             r_counter <= (others => '0');
-```
-
-Filtre anti-rebond (Debounce) : Les contacts métalliques de la molette créent des parasites électriques lors de la rotation. Grâce à la condition if s_sample_en = '1', le FPGA ne lit les broches de l'encodeur qu'une seule fois par milliseconde. Ce ralentissement laisse le temps aux contacts de se stabiliser et évite que le compteur ne s'emballe.
-
-```vhdl    
+    
         elsif rising_edge(i_clk_50) then
-            -- On lit l'encodeur UNIQUEMENT toutes les 1 ms
+            -- Lecture de l'encodeur toutes les 1 ms
             if s_sample_en = '1' then
                 
                 -- Incrémentation : Front montant A (B=0) OU Front descendant A (B=1)
@@ -408,6 +408,12 @@ Filtre anti-rebond (Debounce) : Les contacts métalliques de la molette créent 
             end if;
         end if;
     end process;
+
+```
+
+Filtre anti-rebond : Quand on tourne la molette, les contacts mécaniques créent des rebonds qui peuvent fausser la lecture. Avec la condition if s_sample_en = '1', le FPGA ne lit l'état de l'encodeur qu'une fois toutes les 1 ms. Ainsi, le signal a le temps de se stabiliser et le compteur ne compte pas de faux mouvements.
+
+```vhdl
 
     pll0 : component pll 
         port map (
