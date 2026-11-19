@@ -527,7 +527,7 @@ Dès que l'écran affiche l'endroit où se trouve notre point (r_x_pos, r_y_pos)
 
 2. Test sur la carte
 Vérification sur la carte et à l'écran :Sur la carte DE10-Nano : Pour vérifier que le bouton de gauche comptait bien les crans avant même de regarder l'écran, on a relié la position horizontale r_x_pos aux 10 LEDs de la carte (o_leds <= std_logic_vector(to_unsigned(r_x_pos, 10));), ce qui nous a permis de voir les LEDs changer en direct.
-via VLC : Après avoir envoyé le programme dans la carte, on a bien obtenu un seul point blanc au milieu de l'écran qui bouge à l'horizontale et à la verticale quand on tourne les deux boutons, sans jamais sortir des bords de l'image ($720 \times 480$).
+via VLC : Après avoir envoyé le programme dans la carte, on a bien obtenu un seul point blanc au milieu de l'écran qui bouge à l'horizontale et à la verticale quand on tourne les deux boutons, sans jamais sortir des bords de l'image (720x480).
 
 
 L'encodeur gauche contrôle la coordonnée horizontale r_x_pos et l'encodeur droit contrôle la coordonnée verticale r_y_pos , avec un point de départ au centre de l'écran (h_res / 2, v_res / 2).
@@ -565,12 +565,12 @@ o_hdmi_tx_d <= x"FFFFFF" when s_pixel_read = "1" else x"000000";
 
 1. Mémoire dual-port
 Une mémoire dual-port (DPRAM) est une mémoire qui possède deux accès totalement indépendants port A et port B, chacun ayant sa propre horloge, son adresse et ses propres fils de données.
-Dans notre projet, cela nous permet de faire deux choses en même temps sans qu'elles se gênent :Le port A sert à enregistrer le dessin dès qu'on tourne les boutons (à $50\text{ MHz}$).
-Le port B sert à lire l'image en continu pour l'envoyer à l'écran HDMI (à $27\text{ MHz}$).   
+Dans notre projet, cela nous permet de faire deux choses en même temps sans qu'elles se gênent :Le port A sert à enregistrer le dessin dès qu'on tourne les boutons (à 50 MHz).
+Le port B sert à lire l'image en continu pour l'envoyer à l'écran HDMI (à 27 MHz).   
 
 
 2. Schéma 
-Comme l'écran est un tableau en 2D (720 * 480 pixels) et que la mémoire est une longue liste en 1D de $345\,600$ cases (de 0 à 345599), on transforme chaque position (X, Y) en un numéro de case unique avec le calcul :
+Comme l'écran est un tableau en 2D (720 * 480 pixels) et que la mémoire est une longue liste en 1D de 345 600 cases (de 0 à 345599), on transforme chaque position (X, Y) en un numéro de case unique avec le calcul :
 Adresse = (Y * 720) + X 
 Chaque case stocke simplement 1 si le pixel a été dessiné (blanc) ou 0 s'il est vide (noir).
 <img width="2048" height="762" alt="WhatsApp Image 2026-11-19 at 11 24 03" src="https://github.com/user-attachments/assets/a6c7705b-07b6-429c-9d1d-ff0d4fb5e571" />
