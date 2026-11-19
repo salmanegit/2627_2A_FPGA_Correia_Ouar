@@ -531,6 +531,49 @@ signal r_x_pos : natural range 0 to h_res - 1 := h_res / 2; -- Départ au centre
 signal r_y_pos : natural range 0 to v_res - 1 := v_res / 2;
 ```
 
+```VHDL
+    -- 1. Gestion des deux encodeurs (X = Gauche, Y = Droit)
+    process(i_clk_50, i_rst_n)
+    begin
+        if i_rst_n = '0' then
+            r_L_A_prev <= '0';
+            r_L_B_prev <= '0';
+            r_R_A_prev <= '0';
+            r_R_B_prev <= '0';
+            r_x_pos    <= h_res / 2;
+            r_y_pos    <= v_res / 2;
+            
+        elsif rising_edge(i_clk_50) then
+            r_L_A_prev <= i_left_ch_a;
+            r_L_B_prev <= i_left_ch_b;
+            r_R_A_prev <= i_right_ch_a;
+            r_R_B_prev <= i_right_ch_b;
+
+            -- Encodeur Gauche -> Déplacement Horizontal (X)
+            if (i_left_ch_a = '1' and r_L_A_prev = '0' and i_left_ch_b = '0') then
+                if r_x_pos < h_res - 1 then
+                    r_x_pos <= r_x_pos + 1;
+                end if;
+            elsif (i_left_ch_b = '1' and r_L_B_prev = '0' and i_left_ch_a = '0') then
+                if r_x_pos > 0 then
+                    r_x_pos <= r_x_pos - 1;
+                end if;
+            end if;
+
+            -- Encodeur Droit -> Déplacement Vertical (Y)
+            if (i_right_ch_a = '1' and r_R_A_prev = '0' and i_right_ch_b = '0') then
+                if r_y_pos < v_res - 1 then
+                    r_y_pos <= r_y_pos + 1;
+                end if;
+            elsif (i_right_ch_b = '1' and r_R_B_prev = '0' and i_right_ch_a = '0') then
+                if r_y_pos > 0 then
+                    r_y_pos <= r_y_pos - 1;
+                end if;
+            end if;
+        end if;
+    end process;
+```
+
 1. Modification du fichier telecran.vhd
 Calcul de la position (r_x_pos, r_y_pos) avec les encodeurs :
 On lit les signaux des deux boutons rotatifs pour déplacer notre point à l'écran. Le bouton de gauche (i_left_ch_a, i_left_ch_b) fait bouger le point à l'horizontale sur r_x_pos (entre 0 et 719), et le bouton de droite (i_right_ch_a, i_right_ch_b) le fait bouger à la verticale sur r_y_pos (entre 0 et 479) — on a corrigé l'erreur du sujet qui parlait deux fois du bouton de gauche.
@@ -549,10 +592,73 @@ via VLC : Après avoir envoyé le programme dans la carte, on a bien obtenu un s
 
 
 ## Mémorisation
+
+```VHDL
+-- Calculs d'adresses linéaires (Y * Largeur + X)
+s_addr_enc   <= (r_y_pos * h_res) + r_x_pos;
+s_ram_addr_b <= (s_y_counter * h_res) + s_x_counter when (s_x_counter < h_res and s_y_counter < v_res) else 0;
+
+-- 3. Instanciation de la mémoire DPRAM (Framebuffer 1 bit par pixel)
+u_ram : entity work.dpram
+    generic map (
+        mem_size   => c_mem_size,
+        data_width => 1
+    )
+    port map (
+        i_clk_a  => i_clk_50,
+        i_clk_b  => s_clk_27,
+        i_data_a => s_ram_data_a,
+        i_data_b => "0",
+        i_addr_a => s_ram_addr_a,
+        i_addr_b => s_ram_addr_b,
+        i_we_a   => '1',
+        i_we_b   => '0',
+        o_q_a    => open,
+        o_q_b    => s_pixel_read
+    );
+
+-- Couleur de sortie : Blanc si le pixel en mémoire vaut '1', Noir sinon
+o_hdmi_tx_d <= x"FFFFFF" when s_pixel_read = "1" else x"000000";
+
+```
+
 1. Mémoire dual-port
 Une mémoire dual-port (DPRAM) est une mémoire qui possède deux accès totalement indépendants port A et port B, chacun ayant sa propre horloge, son adresse et ses propres fils de données.
 Dans notre projet, cela nous permet de faire deux choses en même temps sans qu'elles se gênent :Le port A sert à enregistrer le dessin dès qu'on tourne les boutons (à $50\text{ MHz}$).
 Le port B sert à lire l'image en continu pour l'envoyer à l'écran HDMI (à $27\text{ MHz}$).   
 
+<img width="1600" height="847" alt="image" src="https://github.com/user-attachments/assets/d73c629a-4568-422f-9045-9bcb448ae418" />
+
 
 ## Effacement
+
+```VHDL
+-- 2. Machine à états pour l'effacement de l'écran (appui sur bouton encodeur gauche)
+process(i_clk_50, i_rst_n)
+begin
+    if i_rst_n = '0' then
+        r_state      <= S_DRAW;
+        r_clear_addr <= 0;
+    elsif rising_edge(i_clk_50) then
+        case r_state is
+            when S_DRAW =>
+                if i_left_pb = '0' then -- Bouton appuyé (actif à l'état bas)
+                    r_clear_addr <= 0;
+                    r_state      <= S_CLEAR;
+                end if;
+
+            when S_CLEAR =>
+                if r_clear_addr < c_max_addr then
+                    r_clear_addr <= r_clear_addr + 1;
+                else
+                    r_state <= S_DRAW;
+                end if;
+        end case;
+    end if;
+end process;
+
+-- Multiplexage du Port A (soit on efface avec '0', soit on dessine avec '1')
+s_ram_addr_a <= r_clear_addr when r_state = S_CLEAR else s_addr_enc;
+s_ram_data_a <= "0" when r_state = S_CLEAR else "1";
+```
+
