@@ -542,7 +542,10 @@ via VLC : Après avoir envoyé le programme dans la carte, on a bien obtenu un s
 
 
 ## Mémorisation
-
+1. Mémoire dual-port
+Une mémoire dual-port (DPRAM) est une mémoire qui possède deux accès totalement indépendants port A et port B, chacun ayant sa propre horloge, son adresse et ses propres fils de données.
+Dans notre projet, cela nous permet de faire deux choses en même temps sans qu'elles se gênent :Le port A sert à enregistrer le dessin dès qu'on tourne les boutons (à $50\text{ MHz}$).
+Le port B sert à lire l'image en continu pour l'envoyer à l'écran HDMI (à $27\text{ MHz}$).   
 
 
 ## Effacement
