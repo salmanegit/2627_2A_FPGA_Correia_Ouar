@@ -515,19 +515,20 @@ signal r_y_pos : natural range 0 to v_res - 1 := v_res / 2;
     end process;
 ```
 
-1. Modification du fichier telecran.vhd
+1. Modification du fichier telecran.vhd :
 Calcul de la position (r_x_pos, r_y_pos) avec les encodeurs :
-On lit les signaux des deux boutons rotatifs pour déplacer notre point à l'écran. Le bouton de gauche (i_left_ch_a, i_left_ch_b) fait bouger le point à l'horizontale sur r_x_pos (entre 0 et 719), et le bouton de droite (i_right_ch_a, i_right_ch_b) le fait bouger à la verticale sur r_y_pos (entre 0 et 479) puis on a corrigé l'erreur du sujet qui parlait deux fois du bouton de gauche.
-Quand on appuie sur le bouton de remise à zéro (i_rst_n = '0'), on replace le point directement au milieu de l'écran (r_x_pos <= h_res / 2; et r_y_pos <= v_res / 2;).
+On lit les signaux des deux boutons rotatifs pour déplacer notre point à l'écran. Le bouton de gauche  fait bouger le point à l'horizontale sur r_x_pos entre 0 et 719, et le bouton de droite le fait bouger à la verticale sur r_y_pos (entre 0 et 479) puis on a corrigé l'erreur du sujet qui parlait deux fois du bouton de gauche.
+Quand on appuie sur le bouton de remise à zéro, on replace le point directement au milieu de l'écran.
 
 Affichage du point blanc (x"FFFFFF") sur o_hdmi_tx_d :
-Pour cette étape, on compare simplement la position de nos boutons avec la position en cours d'affichage de l'écran (s_x_counter, s_y_counter) code : 
+Pour cette étape, on compare simplement la position de nos boutons avec la position en cours d'affichage de l'écran
+code : 
 o_hdmi_tx_d <= x"FFFFFF" when (s_x_counter = r_x_pos and s_y_counter = r_y_pos) else x"000000";
 
-Dès que l'écran affiche l'endroit où se trouve notre point (r_x_pos, r_y_pos), on envoie la couleur blanche x"FFFFFF". Pour tout le reste de l'écran, on envoie du noir (x"000000").
+Dès que l'écran affiche l'endroit où se trouve notre point, on envoie la couleur blanche x"FFFFFF". Pour tout le reste de l'écran, on envoie du noir (x"000000").
 
 2. Test sur la carte
-Vérification sur la carte et à l'écran sur la carte : Pour vérifier que le bouton de gauche comptait bien les crans avant même de regarder l'écran, on a relié la position horizontale r_x_pos aux 10 LEDs de la carte (o_leds <= std_logic_vector(to_unsigned(r_x_pos, 10));), ce qui nous a permis de voir les LEDs changer en direct.
+Vérification sur la carte et à l'écran sur la carte : Pour vérifier que le bouton de gauche comptait bien les crans avant même de regarder l'écran, on a relié la position horizontale r_x_pos aux 10 LEDs de la carte, ce qui nous a permis de voir les LEDs changer en direct.
 via VLC : Après avoir envoyé le programme dans la carte, on a bien obtenu un seul point blanc au milieu de l'écran qui bouge à l'horizontale et à la verticale quand on tourne les deux boutons, sans jamais sortir des bords de l'image (720x480).
 
 
@@ -578,7 +579,7 @@ o_hdmi_tx_d <= x"FFFFFF" when s_pixel_read = "1" else x"000000";
 
 Explication : 
 On configure la mémoire avec mem_size => c_mem_size (720 * 480 = 345 600 cases) et data_width => 1 (1 seul bit par case).
-Sur le Port A, on branche l'horloge i_clk_50 (50MHz), on laisse l'écriture toujours active (i_we_a => '1') et on écrit "1" à la position des boutons (s_addr_enc).
+Sur le Port A, on branche l'horloge i_clk_50 (50MHz), on laisse l'écriture toujours active (i_we_a => '1') et on écrit "1" à la position des boutons.
 Sur le Port B, on branche l'horloge de l'écran s_clk_27 (27 MHz), on bloque l'écriture (i_we_b => '0') pour ne faire que de la lecture, et on récupère la valeur lue dans s_pixel_read.
 
 4. Modifiez encore une fois le signal o_hdmi_tx_d.
@@ -602,8 +603,8 @@ Notre solution :
 On a créé un système à deux modes de fonctionnement (une machine à états r_state) qui commande le Port A de la mémoire :
 Mode dessin (S_DRAW) : C'est le mode normal. 
 Le Port A écrit "1" à la position des boutons pour tracer le dessin.
-Déclenchement : Dès qu'on appuie sur le bouton-poussoir de l'encodeur gauche (i_left_pb = '0'), on remet un compteur d'adresse (r_clear_addr) à 0 et on passe en mode effacement (S_CLEAR).
-Mode effacement (S_CLEAR) : on débranche temporairement les boutons du Port A et y branche le compteur r_clear_addr avec la donnée "0". À chaque tic d'horloge 50MHz, le compteur avance d'une case (0, 1, 2... jusqu'à 345599) et écrit "0" dedans. Une fois la dernière case atteinte, on repasse automatiquement en mode dessin (S_DRAW).
+Déclenchement : Dès qu'on appuie sur le bouton-poussoir de l'encodeur gauche , on remet un compteur d'adresse à 0 et on passe en mode effacement.
+Mode effacement (S_CLEAR) : on débranche temporairement les boutons du Port A et y branche le compteur r_clear_addr avec la donnée "0". À chaque tic d'horloge 50MHz, le compteur avance d'une case (0, 1, 2.. à 345599) et écrit "0" dedans. Une fois la dernière case atteinte, on repasse automatiquement en mode dessin.
 
 
 ```VHDL
