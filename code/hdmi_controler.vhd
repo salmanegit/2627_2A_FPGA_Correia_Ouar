@@ -4,11 +4,9 @@ use ieee.numeric_std.all;
 
 entity hdmi_controler is
 	generic (
-		-- Resolution
 		h_res 	: positive := 720;
 		v_res 	: positive := 480;
 
-		-- Timings magic values (480p)
 		h_sync	: positive := 61;
 		h_fp	: positive := 58;
 		h_bp	: positive := 18;
@@ -33,13 +31,13 @@ entity hdmi_controler is
 end hdmi_controler;
 
 architecture rtl of hdmi_controler is
-    constant h_start: positive := h_sync + h_fp;	-- 119
-	constant h_end  : positive := h_res + h_start;	-- 839
-	constant h_total: positive := h_end + h_bp;	    -- 857
+    constant h_start: positive := h_sync + h_fp;	
+	constant h_end  : positive := h_res + h_start;	
+	constant h_total: positive := h_end + h_bp;	   
 
-	constant v_start: positive := v_sync + v_fp;	-- 35
-	constant v_end  : positive := v_res + v_start;	-- 515
-	constant v_total: positive := v_end + v_bp;	    -- 524
+	constant v_start: positive := v_sync + v_fp;	
+	constant v_end  : positive := v_res + v_start;	
+	constant v_total: positive := v_end + v_bp;	   
 
 	constant pixel_number : natural := h_res*v_res;
 
@@ -52,7 +50,7 @@ architecture rtl of hdmi_controler is
 	signal s_x_counter : natural range 0 to (h_res - 1) := 0;
 	signal s_y_counter : natural range 0 to (v_res - 1) := 0;
 begin
-    -- Horizontal control signals
+
 	process(i_clk, i_rst_n)
 	begin
 		if (i_rst_n = '0') then
@@ -80,7 +78,7 @@ begin
 		end if;
 	end process;
 
-	-- Vertical control signals
+
 	process(i_clk, i_rst_n)
 	begin
 		if (i_rst_n = '0') then
@@ -110,7 +108,6 @@ begin
 		end if;
 	end process;
 
-	-- Display enable and dummy pixels
 	process(i_clk, i_rst_n)
 	begin
 		if (i_rst_n = '0') then
@@ -120,20 +117,13 @@ begin
 		end if;
 	end process;
 
-	-- Generate address
 	o_pixel_en <= '1' when (r_v_active = '1') and (r_h_active = '1') else '0';
 
-	-- Modelsim is unhappy when s_x_counter is < 0 or > h_res. 
-	-- We don't care as pixels are only considered valid when 0 <= s_x_counter < h_res
-	-- But we need modelsim to simulate our component
-	-- so we have add the when ... else statement
-	-- Same goes for s_y_counter.
-	-- Also works with a modulo, but takes a lot more resources
-	-- Works without when ... else or mod on quartus
+
 	s_x_counter <= (r_h_count - h_start - 1) when (r_h_count > h_start) and (r_h_count < h_res + h_start + 1) else 0;
 	s_y_counter <= (r_v_count - v_start - 1) when (r_v_count > v_start) and (r_v_count < v_res + v_start + 1) else 0;
 
-	o_pixel_address <= s_x_counter + (s_y_counter * h_res); --r_pixel_counter;
+	o_pixel_address <= s_x_counter + (s_y_counter * h_res); 
 	
 	o_x_counter <= s_x_counter;
 	o_y_counter <= s_y_counter;
