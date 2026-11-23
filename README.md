@@ -377,7 +377,7 @@ Affichage en binaire : La valeur décimale du compteur (r_counter) est directeme
     s_sample_en <= '1' when r_debounce_cnt = 50000 else '0';
 ```
 
-Génération du délai (Timer) : L'horloge du FPGA tournant à 50 MHz, le compteur r_debounce_cnt est configuré pour s'incrémenter jusqu'à 50 000. Cela correspond exactement à un délai de 1 milliseconde. À la fin de ce cycle, une impulsion d'activation (s_sample_en) est envoyée.
+Timer : L'horloge du FPGA tournant à 50 MHz, le compteur r_debounce_cnt est configuré pour s'incrémenter jusqu'à 50 000. Cela correspond exactement à un délai de 1 milliseconde. À la fin de ce cycle, une impulsion d'activation (s_sample_en) est envoyée.
 ```vhdl    
     -- Process de l'encodeur avec anti-rebond
     process(i_clk_50, i_rst_n)
