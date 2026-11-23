@@ -200,19 +200,19 @@ _n indique que le signal de reset est actif lorsqu'il est à l'état bas. Ainsi,
 
 Chenillard : 
 
--- 1. 
+1. 
 o_leds : out std_logic_vector(9 downto 0); -- Déclaration d'un vecteur de 10 bits pour adresser les 10 LEDs de la carte d'extension.
 
--- 2.
+2.
 signal r_leds : std_logic_vector(9 downto 0) := "0000000001"; -- Création du registre interne sur 10 bits, initialisé avec le premier bit à '1' pour amorcer le chenillard.
 
--- 3.
+3.
 r_leds <= "0000000001"; -- Réinitialisation du registre à son état de départ en cas d'appui sur le bouton KEY0.
 
--- 4. 
+4. 
 r_leds <= r_leds(8 downto 0) & r_leds(9); -- Décalage circulaire par concaténation (&) : les 9 bits de droite sont décalés à gauche, et le bit sortant (9) est réinjecté à l'index 0.
 
--- 5.
+5.
 o_leds <= r_leds; -- Connexion des valeurs du registre interne aux sorties physiques.
 
 
@@ -271,8 +271,9 @@ du TP :
 <img width="2298" height="1058" alt="image" src="https://github.com/user-attachments/assets/55febbce-63e0-4066-8a58-093e942c1879" />
 
 Interprétation :  
-On observe bien les deux sens de rotation simulés par le testbench.   Sens 1 (Incrémentation) : Le signal i_ch_a passe à '1' en premier (en avance sur i_ch_b). Le compteur o_leds s'incrémente bien et passe de 0000000000 à 0000000001 (valeur 1).   
-Sens 2 (Décrémentation) : Plus loin dans la simulation (autour de 700 000 ps), c'est le signal i_ch_b qui passe à '1' en premier (en avance sur i_ch_a). Le compteur détecte le changement de sens et se décrémente pour revenir à 0000000000 (valeur 0).   
+On observe bien les deux sens de rotation simulés par le testbench.   
+Sens 1 incrémentation: Le signal i_ch_a passe à '1' en premier. Le compteur o_leds s'incrémente bien et passe de 0000000000 à 0000000001 .   
+Sens 2 Décrémentation : Plus loin dans la simulation autour de 700 000 ps, c'est le signal i_ch_b qui passe à '1' en premier. Le compteur détecte le changement de sens et se décrémente pour revenir à 0000000000.   
 La logique de détection de sens et le compteur fonctionnent bien. 
 
 
@@ -377,7 +378,7 @@ Affichage en binaire : La valeur décimale du compteur (r_counter) est directeme
     s_sample_en <= '1' when r_debounce_cnt = 50000 else '0';
 ```
 
-Timer : L'horloge du FPGA tournant à 50 MHz, le compteur r_debounce_cnt est configuré pour s'incrémenter jusqu'à 50 000. Cela correspond exactement à un délai de 1 milliseconde. À la fin de ce cycle, une impulsion d'activation (s_sample_en) est envoyée.
+Timer : L'horloge du FPGA tournant à 50 MHz, le compteur r_debounce_cnt est configuré pour s'incrémenter jusqu'à 50 000. Cela correspond exactement à un délai de 1 milliseconde. À la fin de ce cycle, une impulsion d'activation est envoyée.
 ```vhdl    
     -- Process de l'encodeur avec anti-rebond
     process(i_clk_50, i_rst_n)
