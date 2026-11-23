@@ -521,13 +521,13 @@ On lit les signaux des deux boutons rotatifs pour déplacer notre point à l'éc
 Quand on appuie sur le bouton de remise à zéro (i_rst_n = '0'), on replace le point directement au milieu de l'écran (r_x_pos <= h_res / 2; et r_y_pos <= v_res / 2;).
 
 Affichage du point blanc (x"FFFFFF") sur o_hdmi_tx_d :
-Pour cette étape (avant d'ajouter la mémoire), on compare simplement la position de nos boutons avec la position en cours d'affichage de l'écran (s_x_counter, s_y_counter) code : 
+Pour cette étape, on compare simplement la position de nos boutons avec la position en cours d'affichage de l'écran (s_x_counter, s_y_counter) code : 
 o_hdmi_tx_d <= x"FFFFFF" when (s_x_counter = r_x_pos and s_y_counter = r_y_pos) else x"000000";
 
 Dès que l'écran affiche l'endroit où se trouve notre point (r_x_pos, r_y_pos), on envoie la couleur blanche x"FFFFFF". Pour tout le reste de l'écran, on envoie du noir (x"000000").
 
 2. Test sur la carte
-Vérification sur la carte et à l'écran :Sur la carte DE10-Nano : Pour vérifier que le bouton de gauche comptait bien les crans avant même de regarder l'écran, on a relié la position horizontale r_x_pos aux 10 LEDs de la carte (o_leds <= std_logic_vector(to_unsigned(r_x_pos, 10));), ce qui nous a permis de voir les LEDs changer en direct.
+Vérification sur la carte et à l'écran sur la carte : Pour vérifier que le bouton de gauche comptait bien les crans avant même de regarder l'écran, on a relié la position horizontale r_x_pos aux 10 LEDs de la carte (o_leds <= std_logic_vector(to_unsigned(r_x_pos, 10));), ce qui nous a permis de voir les LEDs changer en direct.
 via VLC : Après avoir envoyé le programme dans la carte, on a bien obtenu un seul point blanc au milieu de l'écran qui bouge à l'horizontale et à la verticale quand on tourne les deux boutons, sans jamais sortir des bords de l'image (720x480).
 
 
